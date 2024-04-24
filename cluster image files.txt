@@ -1,0 +1,11 @@
+File	Element
+full_thinsection_maps_exam_eds_Al.tif	Al
+full_thinsection_maps_exam_eds_Ca.tif	Ca
+full_thinsection_maps_exam_eds_Fe.tif	Fe
+full_thinsection_maps_exam_eds_K.tif	K
+full_thinsection_maps_exam_eds_Mg.tif	Mg
+full_thinsection_maps_exam_eds_Na.tif	Na
+full_thinsection_maps_exam_eds_O.tif	O
+full_thinsection_maps_exam_eds_P.tif	P
+full_thinsection_maps_exam_eds_Si.tif	Si
+full_thinsection_maps_exam_eds_Ti.tif	Ti
