@@ -1,4 +1,4 @@
-# PCA_EDS_clustering
+# PCA_images
 R script for clustering EDS element maps (or other multi-channel images) using principal components.  Email moorelr@vt.edu for questions or comments.
 
 Note: I think I might have a problem soon because of one of the dependencies becoming depreciated.  That's "future me's" problem!
