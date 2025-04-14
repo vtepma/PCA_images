@@ -6,16 +6,16 @@
 # Initialization
 # -----------------------------------------------
 
-library(raster)
+library(raster) # used to import element maps as .tifs
 
-use_beepr <- TRUE  # set as TRUE to enable beepr
+use_beepr <- FALSE  # set as TRUE to enable a "ding" sound when calculations complete (requires beepr package)
 if(use_beepr){
   library(beepr)
 }
 
 # Set up image directory
-image_dir <- "C:/Users/Lowell Moore/Downloads/PCA_images-main/PCA_images-main/example element maps"
-output_dir <- "C:/Users/Lowell Moore/Downloads/PCA_images-main/PCA_images-main/example_output"
+image_dir <- "" # Directory containing .tifs of element maps
+output_dir <- "" # Directory where results will go
 cluster_images <- read.table(
     paste(output_dir, "cluster image files.txt", sep = "/")
       , stringsAsFactors = FALSE, sep = "\t", header = TRUE
