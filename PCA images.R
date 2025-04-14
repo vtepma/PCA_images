@@ -6,14 +6,16 @@
 # Initialization
 # -----------------------------------------------
 
-library("raster") # for the "raster()" function
-library("rgdal")  # used to make the "raster()" function work with
-#   different standard image  types
-library("rgl")    # for 3D exploratory scatter plot
+library(raster)
+
+use_beepr <- TRUE  # set as TRUE to enable beepr
+if(use_beepr){
+  library(beepr)
+}
 
 # Set up image directory
-image_dir <- ""
-output_dir <- ""
+image_dir <- "C:/Users/Lowell Moore/Downloads/PCA_images-main/PCA_images-main/example element maps"
+output_dir <- "C:/Users/Lowell Moore/Downloads/PCA_images-main/PCA_images-main/example_output"
 cluster_images <- read.table(
     paste(output_dir, "cluster image files.txt", sep = "/")
       , stringsAsFactors = FALSE, sep = "\t", header = TRUE
@@ -25,6 +27,7 @@ eds_map <- raster(image_path, band = 1)
 plot(eds_map, col = hcl.colors(100, palette = "Hawaii"))
 # hcl.pals()
 
+if(use_beepr){beep(1)}
 
 # -----------------------------------------------
 # Retrieve flagged pixels over image area
@@ -39,6 +42,8 @@ for(i in 2:nrow(cluster_images)){
   image_data <- cbind(image_data, raster(paste(image_dir, cluster_images$File[i], sep = "/"))[,])
 }
 colnames(image_data) <- cluster_images$Element
+
+if(use_beepr){beep(1)}
 
 # ----------------------------------------------------------
 # PCA calculations
@@ -124,6 +129,7 @@ for(i in 1:ncol(pc_result$x)){
             , row.names = FALSE, quote = FALSE)
 }
 
+if(use_beepr){beep(1)}
 
 # ----------------------------------------------------------
 # K-means clustering
@@ -168,8 +174,9 @@ k.c <- kmeans(z, centers = i
 clusters <- as.numeric(k.c$cluster)
 
 if(FALSE){
-  clusters[which(clusters %in% c(8))] <- 2
-  clusters[which(clusters %in% c(6))] <- 4
+  clusters[which(clusters %in% c(9))] <- 1
+  clusters[which(clusters %in% c(10))] <- 6
+  clusters[which(clusters %in% c(5))] <- 4
 }
 
 # This is used to hold the shape of the map area, and it can be plotted as a
@@ -182,6 +189,6 @@ output_path <- paste(output_dir, "R K-means clusters.csv", sep = "/")
 write.csv(file = output_path, x = as.matrix(eds_map)
           , row.names = FALSE, quote = FALSE)
 
-
+if(use_beepr){beep(1)}
 
 
