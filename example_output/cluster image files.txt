@@ -1,0 +1,11 @@
+File	Element
+Map_002_CountMap_Al-K.tif	Al
+Map_002_CountMap_Ca-K.tif	Ca
+Map_002_CountMap_C-K.tif	C
+Map_002_CountMap_Fe-K.tif	Fe
+Map_002_CountMap_K-K.tif	K
+Map_002_CountMap_Mg-K.tif	Mg
+Map_002_CountMap_Na-K.tif	Na
+Map_002_CountMap_O-K.tif	O
+Map_002_CountMap_Si-K.tif	Si
+Map_002_CountMap_Al-K.tif	Ti
