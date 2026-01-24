@@ -8,7 +8,7 @@
 
 library(raster) # used to import element maps as .tifs
 
-use_beepr <- FALSE  # set as TRUE to enable a "ding" sound when calculations complete (requires beepr package)
+use_beepr <- TRUE  # set as TRUE to enable a "ding" sound when calculations complete (requires beepr package)
 if(use_beepr){
   library(beepr)
 }
@@ -162,33 +162,81 @@ plot(1:max_clust, wss, type = "b", xlab = "Number of clusters", ylab = "Within g
 dev.off()
 
 # calculate clusters and assign colors
-n_clusters <- 8
-k.c <- kmeans(z, centers = i
-              , nstart = 10
+n_clusters <- 10
+k.c <- kmeans(z, centers = n_clusters
+              , nstart = n_clusters
               , algorithm = "Hartigan-Wong"
               , trace = TRUE
               , iter.max = 1E+9
 )
 #k.c$size
 
+output_path <- paste(output_dir, "R K-means clusters.csv", sep = "/")
 clusters <- as.numeric(k.c$cluster)
 
+# Optional load clusters from .csv file
+if(FALSE){clusters <- as.vector(t(as.matrix(read.csv(output_path))))}
+
+# Optional combine clusters
 if(FALSE){
-  clusters[which(clusters %in% c(9))] <- 1
-  clusters[which(clusters %in% c(10))] <- 6
-  clusters[which(clusters %in% c(5))] <- 4
+  clusters[which(clusters %in% c(1))] <- 3
+  clusters[which(clusters %in% c(2))] <- 4
+  clusters[which(clusters %in% c(10))] <- 8
 }
 
 # This is used to hold the shape of the map area, and it can be plotted as a
 #   visual aid if necessary
 eds_map <- raster(image_path, band = 1)
 eds_map[] <- clusters
-plot(eds_map, col = hcl.colors(n_clusters, palette = "Hawaii"))
+clust_cols <- hcl.colors(n_clusters, palette = "Hawaii")
+plot(eds_map, col = clust_cols)
 
-output_path <- paste(output_dir, "R K-means clusters.csv", sep = "/")
+# Save clusters
 write.csv(file = output_path, x = as.matrix(eds_map)
           , row.names = FALSE, quote = FALSE)
 
+#average composition of cluster
+cluster_summary <- data.frame(t(image_data[1,]))
+cluster_summary[1,] <- NA
+for(i in unique(clusters)){
+  flag_rows <- which(clusters == i)
+  prop_i <- round(100*sum(clusters == i)/length(clusters), digits = 2)
+  print(paste("Mean composition of cluster ", i, ": ", prop_i, "%", sep = ""))
+  mean_row_i <- cluster_summary[1,]
+  for(j in 1:ncol(mean_row_i)){
+    mean_row_i[1,j] <- round(mean(image_data[flag_rows,j]), digits = 2)
+  }
+  print(mean_row_i)
+  print("--------------------------")
+
+  cluster_summary <- rbind(cluster_summary, mean_row_i)
+}; cluster_summary <- cluster_summary[-1,]
+write.csv(x = cluster_summary, file = paste(output_dir, "R_clusters.csv", sep = "/"), row.names = FALSE, quote = FALSE)
+
 if(use_beepr){beep(1)}
 
+# Scatter plots
+if(FALSE){
+  flag_sample <- sample(x = 1:length(eds_map), size = 10000, replace = FALSE)
+  plot_cols <- clust_cols[clusters[flag_sample]]
+  x_col <- which(colnames(image_data) == "COMPO")
+  y_col <- which(colnames(image_data) == "Fe")
+  z_col <- which(colnames(image_data) == "Ti")
+  xs <- image_data[flag_sample,x_col]
+  ys <- image_data[flag_sample,y_col]
+  zs <- image_data[flag_sample,z_col]
+  
+  # 2d plot
+  plot(xs, ys, col = plot_cols, pch = 16, cex = 0.5
+       , xlab = colnames(image_data)[x_col]
+       , ylab = colnames(image_data)[y_col])
+  
+  # 3d plot
+  library(rgl)
+  plot3d(xs, ys, zs, col = plot_cols
+       , xlab = colnames(image_data)[x_col]
+       , ylab = colnames(image_data)[y_col]
+       , zlab = colnames(image_data)[z_col]
+       )
+}
 
